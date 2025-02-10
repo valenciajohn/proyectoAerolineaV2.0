@@ -9,6 +9,8 @@ export interface IUsuario extends Document {
   genero: mongoose.Types.ObjectId;
   prefijo: mongoose.Types.ObjectId;
   celular: string;
+  mfaVerified: boolean;
+  mfaExpires: Date;
   pais_nacimiento: mongoose.Types.ObjectId;
   rol: mongoose.Types.ObjectId;
 }
@@ -22,6 +24,8 @@ const UsuarioSchema = new Schema<IUsuario>({
   genero: { type: Schema.Types.ObjectId, ref: "generos", required: true },
   prefijo: { type: Schema.Types.ObjectId, ref: "prefijos", required: true },
   celular: { type: String, required: true },
+  mfaVerified: { type: Boolean, default: false }, 
+  mfaExpires: { type: Date },
   pais_nacimiento: { type: Schema.Types.ObjectId, ref: "pais", required: true },
   rol: { type: Schema.Types.ObjectId, ref: "rols", required: true },
 }, { timestamps: true });

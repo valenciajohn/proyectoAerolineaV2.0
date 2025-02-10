@@ -8,5 +8,8 @@ const SuscriptorSchema = new Schema<ISuscriptor>({
   email: { type: String, required: true, unique: true },
 }, { timestamps: true });
 
-export default mongoose.models.Suscriptor || mongoose.model<ISuscriptor>("suscriptors", SuscriptorSchema);
+
+const SuscriptorModel = mongoose.models.Suscriptor || mongoose.model<ISuscriptor>("suscriptors", SuscriptorSchema);
+
+export default SuscriptorModel;
 

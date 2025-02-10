@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dbConnect from '../../../src/lib/bdConnect';
-import Prefijo from '../../../src/models/prefijo';
+import PrefijoModel from '@/models/prefijo';
 import Usuario from '../../../src/models/usuario'; 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -20,6 +20,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
+    if (!mongoose.models["prefijos"]) {
+        console.log("Registrando manualmente el modelo 'prefijos'...");
+        mongoose.model("prefijos", PrefijoModel.schema);
+    }
+
     console.log("Modelos registrados en Mongoose:", mongoose.modelNames());
     console.log("Buscando usuario...");
     const usuario = await Usuario.findOne({ email }).populate("prefijo");

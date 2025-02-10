@@ -1,6 +1,9 @@
+"use client";
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { jwtDecode } from "jwt-decode";
+import { io } from "socket.io-client";
+const socket = io(process.env.NEXT_PUBLIC_BASE_URL); // Cambiar en producción
 
 const LoadingPage = () => {
   const [userPhone, setUserPhone] = useState('');
@@ -22,6 +25,17 @@ const LoadingPage = () => {
       if (decoded?.name) setUserName(decoded.name); // Extraer el nombre del token
     }
     
+    socket.on("mfaVerified", (data) => {
+      if (data.phone === phone) {
+        if (data.accepted) {
+          router.push("/dashboard");
+        } else {
+          router.push("/login");
+        }
+      }
+    });
+
+    return () => socket.disconnect();
   }, [router]);
 
   useEffect(() => {
@@ -35,12 +49,12 @@ const LoadingPage = () => {
 
         const data = await response.json();
         if (response.ok) {
-          console.log('📲 SMS enviado con éxito:', data.message);
+          console.log('SMS enviado con éxito:', data.message);
         } else {
-          console.error('❌ Error enviando SMS:', data.error);
+          console.error('Error enviando SMS:', data.error);
         }
       } catch (error) {
-        console.error('❌ Error en la solicitud de SMS:', error);
+        console.error('Error en la solicitud de SMS:', error);
       }
     };
 
